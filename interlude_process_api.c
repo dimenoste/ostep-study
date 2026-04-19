@@ -6,7 +6,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-int	q1(void)
+void	q1(void)
 {
 	int rc, x, y;
 	x = 100;
@@ -26,12 +26,34 @@ int	q1(void)
 	}
 	x += 10;
 	y = 3;
-	printf("x is %d from preccess (pid: %d)\n", x, (int)getpid());
-	printf("y is %d from preccess (pid: %d)\n", y, (int)getpid());
+	printf("x is %d from process (pid: %d)\n", x, (int)getpid());
+	printf("y is %d from process (pid: %d)\n", y, (int)getpid());
+	printf("rc process (RC pid: %d)\n", rc);
 }
 
-int	q2(void)
+void	q2(void)
 {
+	int		fd;
+	int		rc;
+	char	*mystr;
+
+	mystr = "0123456789";
+	fd = open("./error.txt", O_RDWR | O_CREAT);
+	if (fd == -1)
+	{
+		fprintf(stderr, "opening of file failed\n");
+		return ;
+	}
+	rc = fork();
+	printf("pid of main process is %d\n", getpid());
+	printf("pid of child process is %d\n", rc);
+	// if (rc < 0)
+	// {
+	// 	fprintf(stderr, "fork failed\n");
+	// 	return ;
+	// }
+	write(fd, mystr, 10);
+	fsync(fd);
 }
 
 int	main(void)
